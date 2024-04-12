@@ -3,7 +3,8 @@ pipeline {
    stages {
      stage ('Checkout Stage') {
        steps {
-          git changelog: false, poll: false, url: 'https://github.com/brad-jivedh/simple-java-project.git'
+          git branch: 'master', url: 'https://github.com/brad-jivedh/sparkjava-war-example.git'
+
        }
      }
         stage ('Buil stage') {
