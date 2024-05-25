@@ -1,7 +1,7 @@
 pipeline {
 agent {label 'docker_node'}
 environment {
-IMAGE_TAG='${BUILD_NO}'
+REPO_URL="590184138424.dkr.ecr.ap-south-1.amazonaws.com/que-5"
 }
 stages {
   stage ("Checkout stage") {
@@ -13,15 +13,15 @@ stage ("Docker image build stage") {
    steps {
      script {
          echo "Building the docker image"
-         sh "docker build -t 590184138424.dkr.ecr.ap-south-1.amazonaws.com/que-5:${BUILD_NO} ."
+         sh "docker build -t ${REPO_URL}:${BUILD_NUMBER} ."
      }
    }
 }
 stage ("Pushing the the image to AWS-ECR") {
   steps {
     script {
-      sh "aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 590184138424.dkr.ecr.ap-south-1.amazonaws.com/que-5"
-      sh "docker push -v 590184138424.dkr.ecr.ap-south-1.amazonaws.com/que-5:${BUILD_NO}"
+      sh "aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin ${REPO_URL}"
+      sh "docker push -v ${REPO_URL}:${BUILD_NUMBER}"
     }
   }
 }
