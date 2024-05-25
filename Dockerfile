@@ -1,4 +1,4 @@
 FROM ubuntu
-RUN apt update && apt upgrade
-WORKDIR /main
-RUN mkdir dir1 && touch file-1
+RUN apt update && apt upgrade && apt install git -y
+WORKDIR /master
+RUN git clone https://github.com/brad-jivedh/sparkjava-war-example.git
