@@ -1,25 +1,37 @@
 pipeline {
- agent any
-   stages {
-     stage ('Checkout Stage') {
-       steps {
-          git branch: 'master', url: 'https://github.com/brad-jivedh/sparkjava-war-example.git'
-
-       }
-     }
-        stage ('Build stage') {
-          steps {
-              sh '/opt/apache-maven-3.9.6/bin/mvn clean package -Dmaven.test.skip=true'
-       }
-     }
-        stage ('Push') {
-          steps {
-            echo "This is the push stage"
-            }
-     }
-        stage ('Deploy') {
-          steps {
-            sh 'sudo rsync /var/lib/jenkins/workspace/tomcat/target/*.war ubuntu@15.206.79.202:/opt/apache-tomcat-9.0.87/webapps/'       }
+agent {label 'docker_node'}
+environment {
+AWS_ACC_ID='590184138424'
+AWS_REGION='ap-south-1'
+IMAGE_NAME='que-5'
+IMAGE_TAG='${BUILD_NO}'
+}
+stages {
+  stage ("Checkout stage") {
+    steps {
+      git branch: 'main' , url: 'https://github.com/brad-jivedh/sparkjava-war-example.git'
+    }
+}
+stage ("Docker image build stage") {
+   steps {
+     script {
+         echo "Building the docker image"
+         sh "docker build -t ${AWS_ACC_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${IMAGE_NAME}:${BUILD_NO} ."
      }
    }
+}
+stage ("Pushing the the image to AWS-ECR") {
+  steps {
+    script {
+      sh "aws ecr get-login-password --region ${ AWS_REGION } | docker login --username AWS --password-stdin ${ AWS_ACC_ID }.dkr.ecr.${ AWS_REGION }.amazonaws.com"
+      sh "docker push -v ${AWS_ACC_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${IMAGE_NAME}:${BUILD_NO}"
+    }
+  }
+}
+stage ("Deploying the image as a container in Docker server") {
+  steps {
+    sh "docker run -itd --name doc-jen_container ${IMAGE_NAME}:${BUILD_NO}"
+  }
+}
+}
 }
