@@ -9,7 +9,7 @@ IMAGE_TAG='${BUILD_NO}'
 stages {
   stage ("Checkout stage") {
     steps {
-      git branch: 'main' , url: 'https://github.com/brad-jivedh/sparkjava-war-example.git'
+      git branch: 'master' , url: 'https://github.com/brad-jivedh/sparkjava-war-example.git'
     }
 }
 stage ("Docker image build stage") {
