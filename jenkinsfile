@@ -21,7 +21,7 @@ stage ("Pushing the the image to AWS-ECR") {
   steps {
     script {
       sh "aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin ${REPO_URL}"
-      sh "docker push -v ${REPO_URL}:${BUILD_NUMBER}"
+      sh "docker push ${REPO_URL}:${BUILD_NUMBER}"
     }
   }
 }
