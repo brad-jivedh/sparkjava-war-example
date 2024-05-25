@@ -28,7 +28,7 @@ stage ("Pushing the the image to AWS-ECR") {
     }
   }
 }
-stage ("Deploying the image as a container in Docker server") {
+stage ("Building the container in Docker server") {
   steps {
     sh "docker run -itd --name doc-jen_container ${IMAGE_NAME}:${BUILD_NO}"
   }
