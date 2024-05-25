@@ -1,9 +1,6 @@
 pipeline {
 agent {label 'docker_node'}
 environment {
-AWS_ACC_ID='590184138424'
-AWS_REGION='ap-south-1'
-IMAGE_NAME='que-5'
 IMAGE_TAG='${BUILD_NO}'
 }
 stages {
@@ -16,15 +13,15 @@ stage ("Docker image build stage") {
    steps {
      script {
          echo "Building the docker image"
-         sh "docker build -t ${AWS_ACC_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${IMAGE_NAME}:${BUILD_NO} ."
+         sh "docker build -t 590184138424.dkr.ecr.ap-south-1.amazonaws.com/que-5:${BUILD_NO} ."
      }
    }
 }
 stage ("Pushing the the image to AWS-ECR") {
   steps {
     script {
-      sh "aws ecr get-login-password --region ${ AWS_REGION } | docker login --username AWS --password-stdin ${ AWS_ACC_ID }.dkr.ecr.${ AWS_REGION }.amazonaws.com"
-      sh "docker push -v ${AWS_ACC_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${IMAGE_NAME}:${BUILD_NO}"
+      sh "aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 590184138424.dkr.ecr.ap-south-1.amazonaws.com/que-5"
+      sh "docker push -v 590184138424.dkr.ecr.ap-south-1.amazonaws.com/que-5:${BUILD_NO}"
     }
   }
 }
