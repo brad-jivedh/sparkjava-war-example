@@ -1,23 +1,31 @@
-pipeline {
-agent {label 'docker'}
-stages {
-  stage ("Checkout stage") {
-    steps {
-      git branch: 'master' , url: 'https://github.com/brad-jivedh/sparkjava-war-example.git'
+pipeline{
+    agent { label 'k8s_node'}
+    environment{
+        IMAGE_TAG = "${BUILD_NUMBER}"
     }
-}
-stage ("Docker image build stage") {
-   steps {
-     script {
-         echo "Building the docker image"
-         sh "docker build -t image_1:${BUILD_NUMBER} ."
-     }
-   }
-}
-stage ("Building the container in Docker server") {
-  steps {
-    sh "docker run -d -p 90:80 image_1:${BUILD_NUMBER}"
-  }
-}
-}
+    stages{
+       stage('Checkout Stage'){
+            steps{
+                git branch: 'main', url: 'https://github.com/brad-jivedh/java-example.git'
+            }
+         }        
+        stage('Building the docker image'){
+           steps{
+           script {
+            sh 'sudo docker build -t jivedh2019/assign_2:IMAGE_TAG .'
+          }
+        }
+        }
+        stage('Pushing the image to Dockerhub'){
+          steps{
+            sh 'docker push jivedh2019/assign_2:IMAGE_TAG'
+          }
+        }
+        stage('Deploying in k8s cluster') {
+          steps{
+            sh 'microk8s kubectl apply -f deploy.yaml'
+            sh 'microk8s kubectl apply -f nodeport.yaml'
+          } 
+        }
+    }
 }
