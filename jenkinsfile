@@ -18,7 +18,7 @@ pipeline{
         }
         stage('Pushing the image to Dockerhub'){
           steps{
-            sh 'docker push jivedh2019/assign_2:IMAGE_TAG'
+            sh 'sudo docker push jivedh2019/assign_2:IMAGE_TAG'
           }
         }
         stage('Deploying in k8s cluster') {
