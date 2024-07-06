@@ -6,7 +6,7 @@ pipeline{
     stages{
        stage('Checkout Stage'){
             steps{
-                git branch: 'main', url: 'https://github.com/brad-jivedh/java-example.git'
+                git branch: 'main', url: 'https://github.com/brad-jivedh/sparkjava-war-example.git'
             }
          }        
         stage('Building the docker image'){
